@@ -26,28 +26,62 @@ while True:
         break
 
 while True:
-    horario = converter_horario(input("Horário de Entrada (HH:MM): "))
-    if horario is not None:
+    horario_entrada = converter_horario(input("Horário de Entrada (HH:MM): "))
+    if horario_entrada is not None:
         break
 
 intervalos = []
 
 while True:
+
+    # Define o horário de referência
+    if not intervalos:
+        horario_referencia = horario_entrada
+    else:
+        horario_referencia = intervalos[-1][1]
+
+    # Solicita e valida o início do intervalo
     while True:
         inicio_intervalo = converter_horario(input("Início do Intervalo (HH:MM): "))
-        if inicio_intervalo is not None:
+
+        if inicio_intervalo is None:
+            print("Início do intervalo inválido. Digite novamente.")
+            continue
+
+        if inicio_intervalo > horario_referencia:
             break
-        else:
-            print("Intervalo inválido. Digite novamente.")
+
+        print("O início do intervalo deve ser posterior ao horário de referência. Digite novamente.")
+
+    # Solicita e valida o fim do intervalo
     while True:
         fim_intervalo = converter_horario(input("Fim do Intervalo (HH:MM): "))
-        if fim_intervalo is not None:
-            break
-        else:
+
+        if fim_intervalo is None:
             print("Fim do intervalo inválido. Digite novamente.")
+            continue
+
+        if fim_intervalo > inicio_intervalo:
+            break
+
+        print("O fim do intervalo deve ser posterior ao início do intervalo. Digite novamente.")
 
     intervalos.append((inicio_intervalo, fim_intervalo))
 
     continuar = input("Deseja adicionar outro intervalo? (S/N): ").upper()
+
     if continuar != 'S':
         break
+
+# Solicita e valida o horário de saída
+while True:
+    horario_saida = converter_horario(input("Horário de Saída (HH:MM): "))
+
+    if horario_saida is None:
+        print("Horário de saída inválido. Digite novamente.")
+        continue
+
+    if horario_saida > intervalos[-1][1]:
+        break
+
+    print("O horário de saída deve ser posterior ao fim do último intervalo. Digite novamente.")
